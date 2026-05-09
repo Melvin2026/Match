@@ -16,8 +16,11 @@ Initial MVP focus:
 - First category: caregiving services.
 - First customer persona: seniors themselves.
 - First supplier persona: freelance caregivers.
+- First external intake model: invite-only.
+- First freelance caregiver verification requirement: valid phone number.
 - First communication channel: email drafts for human approval.
 - Email execution: operator manually copies approved drafts into email.
+- Initial subscription offer: customers and suppliers receive the first matching service free.
 - Initial stack: Next.js web app with a database-backed internal dashboard.
 - Authentication: NextAuth.
 
@@ -260,15 +263,17 @@ Confirmed:
 - First launch geography: Singapore.
 - First customer type: seniors themselves.
 - First supplier type: freelance caregivers.
+- First external intake model: invite-only.
+- First freelance caregiver verification requirement: valid phone number.
 - First external communication channel: email.
 - First email workflow: Match generates approved drafts for manual operator sending.
+- First subscription offer: customers and suppliers receive the first matching service free.
 - Preferred technology stack: Next.js web app with a database-backed internal dashboard.
 - Authentication: NextAuth.
 
 Still to decide:
 
-- Supplier verification requirements.
-- Subscription and fee-for-service package details.
+- Post-first-match subscription and fee-for-service package details.
 
 ### Step 2: Build The Internal Data Backbone
 
@@ -342,12 +347,10 @@ The MVP is successful when an internal operator can:
 
 ## Key Open Questions
 
-1. Should the first external intake be open to the public or invite-only?
-2. Should supplier verification be required before freelance caregivers can be recommended?
-3. What should the first customer subscription tier include?
-4. What should the first supplier subscription tier include?
-5. What fee-for-service items should customers pay for first?
-6. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
+1. What happens after the first free match: paid subscription, fee-for-service, or both?
+2. How should Match validate phone numbers in MVP: manual operator check, OTP verification, or both later?
+3. What fee-for-service items should customers pay for first?
+4. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
 
 ## Initial Technical Direction
 
@@ -368,6 +371,8 @@ Initial app areas:
 - Internal dashboard for operators.
 - Customer demand management for Singapore caregiving requests.
 - Supplier offering management for caregiving providers.
+- Invite-only customer and supplier intake.
+- Freelance caregiver verification by valid phone number.
 - Match recommendation workflow.
 - Human approval queue for email drafts and match recommendations.
 - Subscription and fee-for-service tracking.

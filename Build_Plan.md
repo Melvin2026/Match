@@ -10,8 +10,11 @@ Initial MVP decisions:
 - First Senior Living category: caregiving services.
 - First customer persona: seniors themselves.
 - First supplier persona: freelance caregivers.
+- First external intake model: invite-only.
+- First freelance caregiver verification requirement: valid phone number.
 - First communication channel: email drafts for human approval.
 - First email workflow: operator manually copies approved drafts into email.
+- Initial subscription offer: customers and suppliers receive the first matching service free.
 - Technical stack: Next.js web app with a database-backed internal dashboard.
 - Authentication: NextAuth.
 
@@ -201,7 +204,7 @@ The first MVP should not need:
 ## Immediate Next Steps
 
 1. Define Singapore caregiving MVP user journeys.
-2. Decide supplier verification requirements for freelance caregivers.
+2. Define valid-phone-number verification flow for freelance caregivers.
 3. Create the initial database schema.
 4. Scaffold the Next.js app.
 5. Build the internal operator MVP.
@@ -211,8 +214,8 @@ The first MVP should not need:
 
 ## Open Build Questions
 
-1. Should the first customer-facing experience be a marketplace browse flow, a request form, or both?
-2. Should freelance caregiver onboarding require verification documents before listings can be matched?
-3. What should the first customer and supplier subscription tiers include?
+1. Should the invite-only MVP start with a customer request form, supplier offering form, or both?
+2. Should valid phone numbers be checked manually first, or should OTP verification be added in MVP?
+3. What happens after the first free match: paid subscription, fee-for-service, or both?
 4. What customer fee-for-service items should be supported first?
 5. What sensitive caregiving details require extra approval before sharing?
