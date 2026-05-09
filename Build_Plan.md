@@ -4,6 +4,14 @@
 
 Build Match as a multi-agent, human-in-the-loop marketplace for Senior Living goods and services. The app should support internal operators first, then extend into customer-facing and supplier-facing marketplace experiences.
 
+Initial MVP decisions:
+
+- Launch geography: Singapore.
+- First Senior Living category: caregiving services.
+- First customer persona: seniors themselves.
+- First communication channel: email drafts for human approval.
+- Technical stack: Next.js web app with a database-backed internal dashboard.
+
 ## Guiding Principles
 
 - Start with a narrow Senior Living beachhead before expanding categories.
@@ -119,7 +127,9 @@ Goals:
 
 ### Application
 
-- Web app with an internal dashboard and external marketplace.
+- Next.js web app with an internal dashboard and external marketplace.
+- Use TypeScript for application code.
+- Use a database-backed architecture from the start.
 - Start with a modular monolith for speed.
 - Add background jobs for agent tasks, follow-ups, reminders, and research.
 - Store all agent inputs, outputs, approvals, and final actions.
@@ -187,20 +197,20 @@ The first MVP should not need:
 
 ## Immediate Next Steps
 
-1. Decide the first Senior Living category and launch geography.
-2. Choose the first app stack.
+1. Define Singapore caregiving MVP user journeys.
+2. Decide the first supplier persona and supplier verification requirements.
 3. Create the initial database schema.
-4. Build the internal operator MVP.
-5. Add the first agent workflows.
-6. Add the external customer and supplier intake forms.
-7. Add subscription and fee-for-service tracking.
+4. Scaffold the Next.js app.
+5. Build the internal operator MVP.
+6. Add the first agent workflows.
+7. Add external customer and supplier intake forms.
+8. Add subscription and fee-for-service tracking.
 
 ## Open Build Questions
 
-1. Should the first version be optimized for Singapore, another country, or a broader market?
-2. Should the first beachhead be caregiving, transport, meals, home safety, medical equipment, or another Senior Living category?
-3. What app stack do you prefer, if any?
-4. Should the first customer-facing experience be a marketplace browse flow, a request form, or both?
-5. Should supplier onboarding require verification documents before listings can be matched?
-6. Which channel should be prepared first for draft messages: email, WhatsApp, SMS, or phone scripts?
-
+1. Who is the first supplier persona: freelance caregivers, caregiving agencies, nursing providers, community care organizations, or all of these?
+2. Should the first customer-facing experience be a marketplace browse flow, a request form, or both?
+3. Should supplier onboarding require verification documents before listings can be matched?
+4. Should email drafts be sent through an integration in MVP, or copied manually by the operator first?
+5. What should the first customer and supplier subscription tiers include?
+6. What customer fee-for-service items should be supported first?

@@ -10,6 +10,14 @@ The MVP should help an internal operator capture customer needs, capture supplie
 
 Match should start as an assisted Senior Living matching service, not a fully open marketplace.
 
+Initial MVP focus:
+
+- Geography: Singapore.
+- First category: caregiving services.
+- First customer persona: seniors themselves.
+- First communication channel: email drafts for human approval.
+- Initial stack: Next.js web app with a database-backed internal dashboard.
+
 Initial promise:
 
 - Help families, caregivers, and seniors find suitable Senior Living goods and services.
@@ -243,14 +251,19 @@ Human approval is required before:
 
 ### Step 1: Confirm MVP Decisions
 
-Decide:
+Confirmed:
 
-- First Senior Living category.
-- First launch geography.
-- First customer type.
+- First Senior Living category: caregiving services.
+- First launch geography: Singapore.
+- First customer type: seniors themselves.
+- First external communication channel: email.
+- Preferred technology stack: Next.js web app with a database-backed internal dashboard.
+
+Still to decide:
+
 - First supplier type.
-- First external communication channel.
-- Preferred technology stack.
+- Supplier verification requirements.
+- Subscription and fee-for-service package details.
 
 ### Step 2: Build The Internal Data Backbone
 
@@ -324,14 +337,34 @@ The MVP is successful when an internal operator can:
 
 ## Key Open Questions
 
-1. Which Senior Living category should be first?
-2. Which geography should Match launch in first?
-3. Who is the first customer persona?
-4. Who is the first supplier persona?
-5. Should the first external intake be open to the public or invite-only?
-6. Which communication channel should be supported first: email, WhatsApp, SMS, or phone script?
-7. What technology stack should we use for the MVP?
-8. Should supplier verification be required before suppliers can be recommended?
-9. What should the first subscription tiers include?
-10. What fee-for-service items should customers pay for first?
+1. Who is the first supplier persona: freelance caregivers, caregiving agencies, nursing providers, community care organizations, or all of these?
+2. Should the first external intake be open to the public or invite-only?
+3. Should supplier verification be required before suppliers can be recommended?
+4. What should the first customer subscription tier include?
+5. What should the first supplier subscription tier include?
+6. What fee-for-service items should customers pay for first?
+7. Should emails be sent through an integration in MVP, or should Match generate drafts for manual sending first?
+8. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
 
+## Initial Technical Direction
+
+The MVP should be implemented as a Next.js web app with a database-backed internal dashboard.
+
+Recommended stack:
+
+- Next.js for the web application.
+- TypeScript for application code.
+- PostgreSQL for the database.
+- Prisma for database schema and queries.
+- NextAuth or Clerk for authentication.
+- Tailwind CSS for UI styling.
+- Email draft generation stored inside the app before any human-approved sending.
+
+Initial app areas:
+
+- Internal dashboard for operators.
+- Customer demand management for Singapore caregiving requests.
+- Supplier offering management for caregiving providers.
+- Match recommendation workflow.
+- Human approval queue for email drafts and match recommendations.
+- Subscription and fee-for-service tracking.
