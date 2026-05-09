@@ -12,10 +12,12 @@ The first working MVP slice is available in the app.
 
 Working routes:
 
-- `/`: Internal operator dashboard.
-- `/workflows/care-request`: Care request workflow.
+- `/`: Maestro Dashboard.
+- `/customer`: Customer request and request history page.
+- `/supplier`: Supplier assignment page.
+- `/workflows/care-request`: Earlier care request workflow demo retained for reference.
 
-The current workflow demonstrates logging a senior care request, matching it to a phone-verified freelance caregiver, generating manual-copy email drafts, and updating customer and supplier credit ledgers after operator approval.
+The current three-page workflow demonstrates customer request intake, Maestro-coordinated agent tasks, automatic Matching Agent supplier selection, supplier accept/reject decisions, automatic retry after rejection, and dashboard status tracking through assignment and fulfilment.
 
 ## Recommended MVP Positioning
 
@@ -46,15 +48,14 @@ Initial promise:
 
 ### Internal Operator
 
-The internal operator is the first and most important MVP user.
+The internal operator uses Maestro Dashboard as the operating view.
 
 Needs:
 
 - See new customer requests.
-- See supplier offerings.
-- Review match recommendations.
-- Approve or edit agent-generated drafts.
+- See supplier assignments and responses.
 - Track match status and next actions.
+- Track Maestro, Demand, Matching, and Supply agent task status.
 - Monitor subscriptions and fee-for-service charges.
 
 ### Customer
@@ -65,8 +66,8 @@ Needs:
 
 - Submit a care-related request.
 - Describe urgency, location, budget, and constraints.
-- Receive curated recommendations after internal review.
-- Track basic request status.
+- Track whether the request is pending, awaiting supplier, assigned, or complete.
+- See the current assigned supplier once available.
 
 ### Supplier
 
@@ -77,13 +78,15 @@ Needs:
 - Submit offerings.
 - Describe capacity, pricing, coverage, credentials, and availability.
 - Receive qualified customer opportunities.
-- Track basic match and subscription status.
+- Accept or reject assignments.
+- Mark accepted care services fulfilled.
+- Track current and past assignments.
 
 ## MVP Scope
 
 ### Must Have
 
-- Internal operator dashboard.
+- Maestro Dashboard showing request progress, supplier assignment status, and agent task status.
 - Customer demand records.
 - Supplier offering records.
 - Match records.
@@ -102,6 +105,7 @@ Needs:
 - Supplier offering intake form.
 - Search and filters for demand, supply, and matches.
 - Status tracking for each demand, supply, and match record.
+- Supplier accept/reject workflow with automatic next-supplier retry.
 - Basic research opportunity records.
 
 ### Not Yet
@@ -127,7 +131,9 @@ MVP functions:
 - Receive a goal or new record.
 - Create agent tasks.
 - Route records to Demand, Supply, Matching, Research, or Accounts workflows.
-- Send drafts and recommendations to human approval.
+- Track customer request progress and supplier assignment response.
+- Coordinate automatic retry when a supplier rejects an assignment.
+- Send drafts, billing actions, and sensitive decisions to human approval when those features are active.
 - Track unresolved blockers.
 
 ### Demand Agent
@@ -159,10 +165,11 @@ Compares demand and supply.
 
 MVP functions:
 
-- Generate match recommendations.
+- Auto-select the best available phone-verified supplier for a customer request.
 - Score potential matches.
 - Explain match rationale.
-- Identify gaps when no match exists.
+- Try the next available supplier when a supplier rejects.
+- Identify gaps when no available supplier exists.
 - Recommend whether to ask Demand Agent or Supply Agent to source the missing side.
 
 ### Research Agent
@@ -211,24 +218,21 @@ Core entities:
 
 ### Internal
 
-- Dashboard
-- Customer demands
-- Demand detail
-- Supplier offerings
-- Supplier detail
-- Match recommendations
-- Match detail
-- Agent task board
-- Approval queue
-- Subscriptions and charges
-- Research opportunities
+- Maestro Dashboard
 
 ### External
 
-- Customer request form
-- Supplier offering form
-- Simple customer status page
-- Simple supplier status page
+- Customer request and status page
+- Supplier assignment page
+
+### Later Internal Screens
+
+- Customer demand detail
+- Supplier detail
+- Match detail
+- Approval queue
+- Subscriptions and charges
+- Research opportunities
 
 ## Match Scoring V1
 
@@ -279,8 +283,9 @@ Confirmed:
 - First freelance caregiver verification requirement: valid phone number.
 - First external communication channel: email.
 - First email workflow: Match generates approved drafts for manual operator sending.
+- Current request flow: customer submits request, Matching Agent auto-selects supplier, supplier accepts or rejects, and Maestro Dashboard tracks progress.
 - First subscription offer: customers and suppliers receive the first matching service free.
-- Preferred technology stack: Next.js web app with a database-backed internal dashboard.
+- Preferred technology stack: Next.js web app with a database-backed Maestro Dashboard.
 - Authentication: NextAuth.
 
 Still to decide:
@@ -300,15 +305,16 @@ Create:
 - Draft and approval records.
 - Credit account and credit transaction records.
 
-### Step 3: Build Internal Operator Dashboard
+### Step 3: Build Maestro Dashboard
 
 Create:
 
 - Dashboard summary.
-- Demand list and detail.
-- Supply list and detail.
-- Match list and detail.
-- Approval queue.
+- Customer request progress table.
+- Supplier assignment status.
+- Agent task status.
+- Pipeline counts.
+- Approval queue for later external communication and billing actions.
 
 ### Step 4: Add Matching V1
 
@@ -316,8 +322,10 @@ Create:
 
 - Rules-based match scoring.
 - Match rationale.
-- Gap detection.
-- Next-action recommendation.
+- Auto-selection of the best available phone-verified supplier.
+- Automatic next-supplier retry after supplier rejection.
+- Gap detection when no supplier is available.
+- Maestro next-action recommendation.
 
 ### Step 5: Add Agent Draft Workflows
 
@@ -333,9 +341,10 @@ Create:
 
 Create:
 
-- Customer request form.
+- Customer request and status page.
+- Supplier assignment page.
 - Supplier offering form.
-- Internal review status after submission.
+- Maestro status tracking after submission.
 
 ### Step 7: Add Commercial Tracking
 
@@ -348,15 +357,15 @@ Create:
 
 ## Success Criteria
 
-The MVP is successful when an internal operator can:
+The MVP is successful when Match can:
 
 - Receive a customer request.
-- Record or find supplier offerings.
-- Generate one or more match recommendations.
-- Review the recommendation rationale.
-- Approve or edit follow-up drafts.
-- Track the match through completion.
-- Track subscription and fee-for-service status.
+- Auto-select an eligible phone-verified supplier.
+- Let the supplier accept or reject.
+- Automatically try the next supplier after rejection.
+- Track `Assigned` when a supplier accepts.
+- Track `Complete` only after actual care service fulfilment.
+- Show request, customer, supplier, and agent task progress in Maestro Dashboard.
 
 ## Key Open Questions
 
@@ -368,7 +377,7 @@ The MVP is successful when an internal operator can:
 
 ## Initial Technical Direction
 
-The MVP should be implemented as a Next.js web app with a database-backed internal dashboard.
+The MVP should be implemented as a Next.js web app with a database-backed Maestro Dashboard.
 
 Recommended stack:
 
@@ -382,11 +391,13 @@ Recommended stack:
 
 Initial app areas:
 
-- Internal dashboard for operators.
+- Maestro Dashboard for operators.
 - Customer demand management for Singapore caregiving requests.
+- Customer request and status page.
+- Supplier assignment page.
 - Supplier offering management for caregiving providers.
 - Invite-only customer and supplier intake.
 - Freelance caregiver verification by valid phone number.
-- Match recommendation workflow.
+- Matching Agent auto-selection and next-supplier retry workflow.
 - Human approval queue for email drafts and match recommendations.
 - Subscription and fee-for-service tracking.

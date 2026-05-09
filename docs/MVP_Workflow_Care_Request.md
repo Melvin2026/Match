@@ -1,28 +1,32 @@
-# MVP Workflow: Care Request To Caregiver Match
+# MVP Workflow: Customer Request To Supplier Assignment
 
 ## Purpose
 
-This workflow covers the first Match MVP use case:
+This workflow covers the current Match MVP use case:
 
-1. Log a senior care request.
-2. Route the request through the agent team.
-3. Match the request to a valid freelance caregiver.
-4. Prepare customer and supplier email drafts for manual operator sending.
-5. Update customer and supplier credit accounts when the match is approved.
+1. Customer logs a senior care request.
+2. Maestro coordinates the relevant agent tasks.
+3. Matching Agent auto-selects the best available phone-verified supplier.
+4. Supplier accepts or rejects the assignment.
+5. If supplier rejects, Matching Agent automatically tries the next available supplier.
+6. If supplier accepts, the request becomes `Assigned`.
+7. When the actual care service is fulfilled, the request becomes `Complete`.
+8. Maestro Dashboard tracks request, customer, supplier, and agent task statuses throughout.
 
-## Current App Route
+## Current App Routes
 
-`/workflows/care-request`
-
-The dashboard at `/` links to this workflow through the `New care workflow` and `Open workflow` actions.
+- `/`: Maestro Dashboard.
+- `/customer`: Customer request and request history page.
+- `/supplier`: Supplier assignment page.
+- `/workflows/care-request`: Earlier operator-led workflow retained for reference.
 
 ## Workflow Steps
 
-### 1. Log Care Request
+### 1. Customer Logs Request
 
-The operator records the senior's caregiving need, including:
+The customer records the senior's caregiving need, including:
 
-- Senior name
+- Customer name
 - Email
 - Phone
 - Area
@@ -33,20 +37,17 @@ The operator records the senior's caregiving need, including:
 
 The Demand Agent structures the request for matching.
 
-### 2. Create Agent Tasks
+### 2. Maestro Creates Agent Tasks
 
-The Maestro Agent coordinates the task flow:
+The Maestro Agent coordinates:
 
-- Demand Agent checks the customer request.
-- Supply Agent confirms eligible freelance caregivers.
-- Matching Agent scores caregivers.
-- Accounts Agent prepares credit account updates.
+- Demand Agent: structures the customer request.
+- Matching Agent: auto-selects the best available phone-verified supplier.
+- Supply Agent: tracks supplier assignment response.
 
-### 3. Recommend Caregiver
+### 3. Matching Agent Assigns Supplier
 
-The Matching Agent considers only freelance caregivers with valid phone numbers.
-
-The current V1 matching logic scores fit using:
+The Matching Agent considers phone-verified suppliers and scores fit using:
 
 - Area
 - Availability
@@ -54,68 +55,55 @@ The current V1 matching logic scores fit using:
 - Language or preference fit
 - Phone verification status
 
-### 4. Approve Match
+The highest-ranked available supplier receives the assignment.
 
-The operator approves the recommendation before:
+### 4. Supplier Accepts Or Rejects
 
-- Sharing customer details with the caregiver.
-- Sharing caregiver details with the customer.
-- Copying email drafts into an external email client.
-- Recording match-related credit usage.
+The supplier reviews the assignment at `/supplier`.
 
-### 5. Update Credit Accounts
+- If supplier accepts, request status becomes `Assigned`.
+- If supplier rejects, Matching Agent automatically tries the next available supplier.
+- If no phone-verified supplier is available, the request becomes blocked as `No match yet`.
 
-Customer and supplier accounts track:
+### 5. Supplier Marks Fulfilled
 
-- Top-ups
-- First-match free credits
-- Usage when a match is approved
+`Assigned` means the supplier accepted the assignment.
 
-In the current demo workflow, approval applies:
+`Complete` means the actual care service was fulfilled. The supplier marks the assignment fulfilled from `/supplier`.
 
-- Customer usage: 1 matching credit
-- Supplier usage: 1 qualified lead credit
+### 6. Maestro Dashboard Updates
 
-### 6. Update Dashboard
+The workflow writes request, assignment, timeline, and agent task state to browser local storage under:
 
-The workflow writes the latest request, match, phase, and credit accounts to browser local storage. The dashboard reads that state and updates:
+`match.requests.v2`
 
-- Customer demands
-- Match recommendations
-- Approval queue
-- Agent tasks
-- Credit balance panel
+The Maestro Dashboard refreshes this state and shows:
 
-The `Reset demo` button on the dashboard clears the local workflow state.
-
-## Database Direction
-
-The Prisma schema now includes:
-
-- `CreditAccount`
-- `CreditTransaction`
-- `CreditOwnerType`
-- `CreditTransactionType`
-
-These records will support customer and supplier account balances once the app is connected to PostgreSQL.
+- Open request count.
+- Awaiting supplier count.
+- Assigned count.
+- Complete count.
+- Customer request progress table.
+- Supplier assignment response history.
+- Agent task status for Maestro, Demand, Matching, and Supply.
 
 ## Web Preview Test
 
 1. Start the app with `npm run dev`.
-2. Open `http://localhost:3000/workflows/care-request`.
-3. Click `Log request`.
-4. Click `Run Matching Agent`.
-5. Open `http://localhost:3000` and confirm the request and match appear on the dashboard.
-6. Return to the workflow and review the recommended freelance caregiver.
-7. Click `Approve match and update credits`.
-8. Confirm customer and supplier email drafts are visible.
-9. Confirm customer and supplier credit ledgers each record a `usage` transaction.
-10. Return to the dashboard and confirm the approved match and updated credits are visible.
+2. Open `http://localhost:3000/customer`.
+3. Submit a care request.
+4. Open `http://localhost:3000` and confirm the request appears as awaiting supplier response.
+5. Open `http://localhost:3000/supplier`.
+6. Reject the assignment and confirm the Matching Agent assigns the next available supplier.
+7. Accept the current assignment.
+8. Open `http://localhost:3000` and confirm request status is `Assigned`.
+9. Return to `http://localhost:3000/supplier` and mark the service fulfilled.
+10. Open `http://localhost:3000` and confirm request status is `Complete`.
 
 ## Handoff Note
 
-When returning from the break, start testing from:
+Start testing from:
 
-`http://localhost:3000/workflows/care-request`
+`http://localhost:3000/customer`
 
-The most important behavior to confirm is that the workflow is no longer just a static demo. It should save the request and match in browser local storage, then the dashboard at `http://localhost:3000` should update after the request is logged, matched, and approved.
+The most important behavior to confirm is that the Maestro Dashboard updates after the customer request is submitted, the supplier accepts or rejects, and the actual service is fulfilled.

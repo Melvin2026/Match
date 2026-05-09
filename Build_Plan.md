@@ -6,16 +6,23 @@ Build Match as a multi-agent, human-in-the-loop marketplace for Senior Living go
 
 ## Current Build Status
 
-The initial Next.js MVP scaffold is complete. The app currently includes an internal operator dashboard and a working demo workflow at `/workflows/care-request`.
+The initial Next.js MVP scaffold is complete. The app currently includes a three-page demo workflow:
+
+- `/`: Maestro Dashboard.
+- `/customer`: Customer request and request history page.
+- `/supplier`: Supplier assignment page.
+- `/workflows/care-request`: Earlier operator-led workflow retained for reference.
 
 The current MVP use case demonstrates:
 
-- Logging a senior care request.
-- Routing work through the Demand, Supply, Matching, and Accounts agent roles.
-- Matching the request to a phone-verified freelance caregiver.
-- Preparing customer and supplier email drafts for manual operator copying.
-- Updating customer and supplier credit accounts when the match is approved.
-- Tracking top-ups, first-match free credits, and usage in credit ledgers.
+- Customer logging a senior care request.
+- Maestro coordinating Demand, Matching, and Supply agent tasks.
+- Matching Agent auto-selecting the best available phone-verified supplier.
+- Supplier accepting or rejecting an assignment.
+- Matching Agent automatically trying the next available supplier after rejection.
+- Request status changing to `Assigned` when a supplier accepts.
+- Request status changing to `Complete` when the actual care service is fulfilled.
+- Maestro Dashboard tracking request progress, supplier assignment status, and agent task status.
 
 Initial MVP decisions:
 
@@ -27,6 +34,7 @@ Initial MVP decisions:
 - First freelance caregiver verification requirement: valid phone number.
 - First communication channel: email drafts for human approval.
 - First email workflow: operator manually copies approved drafts into email.
+- Current matching workflow: Matching Agent auto-selects the best available supplier and retries after rejection.
 - Initial subscription offer: customers and suppliers receive the first matching service free.
 - Initial credit model: customer and supplier accounts track top-ups and usage.
 - Technical stack: Next.js web app with a database-backed internal dashboard.
@@ -64,7 +72,7 @@ Deliverables:
 
 Goals:
 
-- Build the internal dashboard for operating Match.
+- Build Maestro Dashboard for operating Match.
 - Let operators create and manage customer demand records.
 - Let operators create and manage supplier offering records.
 - Let the Matching Agent recommend matches with rationale.
@@ -73,7 +81,7 @@ Goals:
 
 Core screens:
 
-- Operator dashboard.
+- Maestro Dashboard.
 - Customer demand list and detail.
 - Supplier supply list and detail.
 - Match recommendation view.
@@ -109,7 +117,8 @@ Goals:
 
 Core screens:
 
-- Customer request form.
+- Customer request and status page.
+- Supplier assignment page.
 - Supplier offering form.
 - Customer account area.
 - Supplier account area.
@@ -179,7 +188,7 @@ Start with workflow-based agents before making them too autonomous.
 - Maestro Agent: routing, task assignment, approval escalation.
 - Demand Agent: customer needs and follow-up.
 - Supply Agent: supplier offerings and follow-up.
-- Matching Agent: match scoring and recommendations.
+- Matching Agent: match scoring, auto-selection, and next-supplier retry after rejection.
 - Research Agent: opportunity research and scoring.
 - Accounts Agent: subscriptions, charges, and payment reminders.
 
@@ -197,10 +206,12 @@ Require human approval before:
 
 The first working MVP should include:
 
-- Internal operator dashboard.
+- Maestro Dashboard.
+- Customer request and status page.
+- Supplier assignment page.
 - Customer demand records.
 - Supplier supply records.
-- Match recommendations.
+- Match recommendations or auto-selected assignments.
 - Agent task records.
 - Draft generation for outreach and follow-up.
 - Human approval queue.
@@ -217,13 +228,13 @@ The first MVP should not need:
 
 ## Immediate Next Steps
 
-1. Connect the care-request workflow to persistent PostgreSQL records.
-2. Add seeded local data for customers, caregivers, matches, drafts, and credit ledgers.
-3. Add invite-only customer and supplier intake forms.
-4. Add a real approval queue for match recommendations and email drafts.
-5. Add copy buttons for approved email drafts.
-6. Add NextAuth sign-in UI and route protection.
-7. Expand credit account screens for top-ups and usage history.
+1. Persist the current three-page workflow to PostgreSQL.
+2. Add seeded local data for customers, suppliers, assignments, and task history.
+3. Add invite-only authentication and route protection for Maestro, customer, and supplier views.
+4. Add a real approval queue for external communications, billing, and sensitive care decisions.
+5. Reconnect credit account screens to the new assignment lifecycle.
+6. Add supplier profile, availability, and offering management.
+7. Add audit events for every agent and supplier status transition.
 
 ## Open Build Questions
 

@@ -105,7 +105,7 @@ export function CareRequestWorkflow() {
               className="text-sm font-semibold text-[var(--accent)] hover:text-[var(--accent-strong)]"
               href="/"
             >
-              Match dashboard
+              Maestro Dashboard
             </Link>
             <h1 className="mt-2 text-3xl font-semibold">
               Care request workflow

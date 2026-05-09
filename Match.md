@@ -27,17 +27,21 @@ Confirmed MVP scope:
 
 Current working app routes:
 
-- `/`: Internal operator dashboard.
-- `/workflows/care-request`: End-to-end MVP care request workflow.
+- `/`: Maestro Dashboard showing request progress, customer status, supplier assignment status, and agent task status.
+- `/customer`: Customer page to log care requests and view past requests.
+- `/supplier`: Supplier page to accept or reject assignments and view current/past assignments.
+- `/workflows/care-request`: Earlier end-to-end care request workflow retained for reference.
 
 Current workflow behavior:
 
-- Operators can log a senior care request.
-- The Matching Agent recommends an eligible phone-verified freelance caregiver.
-- Operators can approve the match.
-- Customer and supplier email drafts are generated for manual copying.
-- Customer and supplier credit ledgers are updated after approval.
-- The dashboard updates from browser-stored workflow state during the MVP demo.
+- Customers can log senior care requests from the Customer page.
+- The Maestro Agent coordinates Demand, Matching, and Supply agent tasks.
+- The Matching Agent auto-selects the best available phone-verified supplier.
+- Suppliers can accept or reject assignments from the Supplier page.
+- If a supplier rejects, the Matching Agent automatically tries the next available supplier.
+- `Assigned` means the supplier accepted the assignment.
+- `Complete` means the actual care service was fulfilled.
+- The Maestro Dashboard updates from browser-stored workflow state and refreshes request progress, supplier status, and agent task status.
 
 ## Product Direction
 
@@ -163,15 +167,17 @@ Responsibilities:
 
 ## Initial Workflow
 
-1. The user gives the Maestro Agent a goal, lead, request, supplier, or opportunity.
-2. The Maestro Agent decides which agent should act first.
-3. The selected agent gathers or updates the relevant information.
-4. The Maestro Agent routes structured information to the next relevant agent.
-5. The Matching Agent evaluates fit between demand and supply.
-6. If a match exists, the Maestro Agent coordinates completion and the Accounts Agent handles billing follow-up.
-7. If a match does not exist, the Maestro Agent assigns either the Demand Agent or Supply Agent to source the missing side.
-8. Any external message, billing action, or commercial commitment is prepared as a draft and sent for human approval.
-9. The Research Agent continuously looks for new opportunities and recommends high-potential areas to pursue.
+1. A customer logs a care request.
+2. The Maestro Agent coordinates the relevant agent tasks.
+3. The Demand Agent structures the customer request.
+4. The Matching Agent evaluates available suppliers and auto-selects the best available phone-verified supplier.
+5. The Supply Agent tracks supplier assignment response.
+6. The supplier accepts or rejects the assignment.
+7. If the supplier rejects, the Matching Agent automatically tries the next available supplier.
+8. If the supplier accepts, the request status becomes `Assigned`.
+9. Once the actual care service is fulfilled, the request status becomes `Complete`.
+10. The Maestro Dashboard reflects the status of requests, customers, suppliers, and agent tasks throughout.
+11. Any external message, billing action, or commercial commitment remains subject to human approval before real execution.
 
 ## Core Data To Capture
 
@@ -254,7 +260,7 @@ Responsibilities:
 ## Possible App Features
 
 - Multi-agent chat interface led by the Maestro Agent.
-- Internal operator dashboard.
+- Maestro Dashboard for request, supplier, and agent task status.
 - Customer-facing marketplace.
 - Supplier-facing marketplace or portal.
 - Customer demand database.
@@ -276,12 +282,14 @@ Core MVP capabilities:
 
 - Capture customer care needs and supplier offerings.
 - Organize demand and supply by Senior Living category.
-- Let the Matching Agent recommend possible matches with rationale.
+- Let the Matching Agent auto-select the best available phone-verified supplier, with rationale.
+- Let suppliers accept or reject assignments.
+- Automatically try the next available supplier after rejection.
 - Let agents prepare outreach, follow-up, onboarding, and billing drafts.
 - Require human approval before sending external messages or taking billing action.
 - Track customer subscriptions, supplier subscriptions, and customer fee-for-service charges.
 - Track customer and supplier credits, including top-ups and usage.
-- Provide an internal dashboard for operations.
+- Provide Maestro Dashboard for operational status tracking.
 - Provide an external-facing marketplace experience for customers and suppliers.
 
 ## Remaining Product Questions

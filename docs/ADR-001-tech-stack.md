@@ -6,7 +6,7 @@ Accepted
 
 ## Context
 
-Match needs an MVP that can support an internal operator dashboard, structured demand and supply records, match recommendations, human approval workflows, and later external customer and supplier intake.
+Match needs an MVP that can support Maestro Dashboard operations, structured demand and supply records, match recommendations or auto-selected assignments, human approval workflows, and later external customer and supplier intake.
 
 The first MVP focus is Singapore caregiving services for seniors, with freelance caregivers as the first supplier persona. MVP intake is invite-only. Freelance caregivers must provide a valid phone number before being recommended. Email is the first communication channel. Agents should prepare drafts and recommendations for human approval rather than taking external action automatically. Approved email drafts will be manually copied and sent by an operator in the MVP.
 
