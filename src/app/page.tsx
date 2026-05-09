@@ -1,3 +1,5 @@
+"use client";
+
 import {
   ClipboardCheck,
   Coins,
@@ -7,19 +9,41 @@ import {
   ShieldCheck,
   UserRoundCheck,
 } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { StatusBadge } from "@/components/status-badge";
 import { initialDashboard } from "@/lib/demo-data";
 import Link from "next/link";
+import {
+  clearCareWorkflows,
+  readCareWorkflows,
+  type StoredCareWorkflow,
+} from "@/lib/match-workflow-store";
 
 export default function Home() {
-  const {
-    metrics,
-    demands,
-    caregivers,
-    matches,
-    approvals,
-    agentTasks,
-  } = initialDashboard;
+  const [storedWorkflows, setStoredWorkflows] = useState<StoredCareWorkflow[]>([]);
+
+  useEffect(() => {
+    function refreshWorkflows() {
+      setStoredWorkflows(readCareWorkflows());
+    }
+
+    refreshWorkflows();
+    window.addEventListener("storage", refreshWorkflows);
+    window.addEventListener("match-care-workflows-updated", refreshWorkflows);
+
+    return () => {
+      window.removeEventListener("storage", refreshWorkflows);
+      window.removeEventListener("match-care-workflows-updated", refreshWorkflows);
+    };
+  }, []);
+
+  const dashboard = useMemo(
+    () => buildDashboardView(storedWorkflows),
+    [storedWorkflows],
+  );
+
+  const { metrics, demands, caregivers, matches, approvals, agentTasks, credits } =
+    dashboard;
 
   return (
     <main className="min-h-screen">
@@ -80,6 +104,16 @@ export default function Home() {
               </Link>
               <button className="rounded-md border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold hover:bg-[var(--panel-soft)]">
                 Invite caregiver
+              </button>
+              <button
+                className="rounded-md border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold hover:bg-[var(--panel-soft)]"
+                onClick={() => {
+                  clearCareWorkflows();
+                  setStoredWorkflows([]);
+                }}
+                type="button"
+              >
+                Reset demo
               </button>
             </div>
           </div>
@@ -287,10 +321,27 @@ export default function Home() {
                 />
                 <div>
                   <h3 className="font-semibold">Credits ledger</h3>
-                  <p className="mt-1 max-w-4xl text-sm leading-6 text-[var(--muted)]">
+              <p className="mt-1 max-w-4xl text-sm leading-6 text-[var(--muted)]">
                     Customer and supplier accounts track top-ups, first-match
                     free credits, and usage when an operator approves a match.
                   </p>
+                  {credits.length > 0 ? (
+                    <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                      {credits.map((credit) => (
+                        <div
+                          className="rounded-md bg-[var(--panel-soft)] px-3 py-2"
+                          key={credit.id}
+                        >
+                          <p className="text-xs uppercase text-[var(--muted)]">
+                            {credit.ownerName}
+                          </p>
+                          <p className="text-lg font-semibold text-[var(--accent)]">
+                            {credit.balance} credits
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
                 </div>
               </div>
               <Link
@@ -305,6 +356,110 @@ export default function Home() {
       </section>
     </main>
   );
+}
+
+function buildDashboardView(storedWorkflows: StoredCareWorkflow[]) {
+  const workflowDemands = storedWorkflows.map((workflow) => ({
+    id: workflow.id,
+    name: workflow.request.seniorName,
+    need: workflow.request.careNeed,
+    area: workflow.request.area,
+    status:
+      workflow.phase === "approved"
+        ? "Matched"
+        : workflow.phase === "matched"
+          ? "Match ready"
+          : "Logged",
+    tone:
+      workflow.phase === "approved"
+        ? ("success" as const)
+        : workflow.phase === "matched"
+          ? ("warning" as const)
+          : ("neutral" as const),
+  }));
+
+  const workflowMatches = storedWorkflows
+    .filter((workflow) => workflow.recommendation)
+    .map((workflow) => ({
+      id: `${workflow.id}-match`,
+      title: `${workflow.request.seniorName} + ${workflow.recommendation?.caregiver.name}`,
+      score: workflow.recommendation?.score ?? 0,
+      rationale:
+        workflow.phase === "approved"
+          ? "Approved match. Customer and supplier credit accounts were updated."
+          : (workflow.recommendation?.rationale ?? ""),
+    }));
+
+  const workflowApprovals = storedWorkflows
+    .filter((workflow) => workflow.phase === "matched")
+    .flatMap((workflow) => [
+      {
+        id: `${workflow.id}-match-approval`,
+        type: "Match",
+        title: `Approve ${workflow.request.seniorName} + ${workflow.recommendation?.caregiver.name}`,
+        summary:
+          "Operator approval is needed before account credits are used and email drafts are treated as final.",
+      },
+      {
+        id: `${workflow.id}-email-approval`,
+        type: "Email",
+        title: `Review email drafts for ${workflow.request.seniorName}`,
+        summary:
+          "Customer and supplier emails are ready for manual copy after match approval.",
+      },
+    ]);
+
+  const latestApproved = storedWorkflows.find(
+    (workflow) => workflow.phase === "approved",
+  );
+  const credits = latestApproved?.creditAccounts ?? [];
+
+  return {
+    metrics: [
+      {
+        ...initialDashboard.metrics[0],
+        value: String(initialDashboard.demands.length + workflowDemands.length),
+        note: workflowDemands.length
+          ? `${workflowDemands.length} new care workflow request added.`
+          : initialDashboard.metrics[0].note,
+      },
+      initialDashboard.metrics[1],
+      {
+        ...initialDashboard.metrics[2],
+        value: String(initialDashboard.approvals.length + workflowApprovals.length),
+        note: workflowApprovals.length
+          ? `${workflowApprovals.length} workflow approval items waiting.`
+          : initialDashboard.metrics[2].note,
+      },
+      {
+        ...initialDashboard.metrics[3],
+        value: credits.length
+          ? String(credits.reduce((total, account) => total + account.balance, 0))
+          : initialDashboard.metrics[3].value,
+        note: credits.length
+          ? "Latest approved workflow updated customer and supplier credits."
+          : initialDashboard.metrics[3].note,
+      },
+    ],
+    demands: [...workflowDemands, ...initialDashboard.demands],
+    caregivers: initialDashboard.caregivers,
+    matches: [...workflowMatches, ...initialDashboard.matches],
+    approvals: [...workflowApprovals, ...initialDashboard.approvals],
+    agentTasks: [
+      ...storedWorkflows.slice(0, 2).map((workflow) => ({
+        id: `${workflow.id}-task`,
+        agent: "Maestro Agent",
+        task:
+          workflow.phase === "approved"
+            ? `Completed match workflow for ${workflow.request.seniorName}.`
+            : `Care request workflow for ${workflow.request.seniorName} is ${workflow.phase}.`,
+        status: workflow.phase === "approved" ? "Completed" : "In progress",
+        tone: workflow.phase === "approved" ? ("success" as const) : ("warning" as const),
+      })),
+      ...initialDashboard.agentTasks,
+    ],
+    credits,
+  };
 }
 
 function Panel({

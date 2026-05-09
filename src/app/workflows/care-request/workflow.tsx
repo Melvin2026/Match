@@ -26,8 +26,13 @@ import {
   type MatchRecommendation,
   type WorkflowPhase,
 } from "@/lib/care-workflow";
+import {
+  createWorkflowSnapshot,
+  upsertCareWorkflow,
+} from "@/lib/match-workflow-store";
 
 export function CareRequestWorkflow() {
+  const [workflowId, setWorkflowId] = useState("workflow-current");
   const [phase, setPhase] = useState<WorkflowPhase>("intake");
   const [request, setRequest] = useState<CareRequest>(initialCareRequest);
   const [recommendation, setRecommendation] =
@@ -42,18 +47,53 @@ export function CareRequestWorkflow() {
   );
 
   function logCareRequest() {
+    const nextWorkflowId = `workflow-${Date.now()}`;
+    setWorkflowId(nextWorkflowId);
     setPhase("logged");
+    upsertCareWorkflow(
+      createWorkflowSnapshot({
+        creditAccounts,
+        id: nextWorkflowId,
+        phase: "logged",
+        recommendation,
+        request,
+      }),
+    );
   }
 
   function runMatchingAgent() {
-    setRecommendation(recommendCaregiver(request, freelanceCaregivers));
+    const nextRecommendation = recommendCaregiver(request, freelanceCaregivers);
+    setRecommendation(nextRecommendation);
     setPhase("matched");
+    upsertCareWorkflow(
+      createWorkflowSnapshot({
+        creditAccounts,
+        id: workflowId,
+        phase: "matched",
+        recommendation: nextRecommendation,
+        request,
+      }),
+    );
   }
 
   function approveMatch() {
     if (!recommendation) return;
-    setCreditAccounts(approveMatchAndApplyCredits(creditAccounts, recommendation));
+    const nextCreditAccounts = approveMatchAndApplyCredits(
+      creditAccounts,
+      recommendation,
+      request,
+    );
+    setCreditAccounts(nextCreditAccounts);
     setPhase("approved");
+    upsertCareWorkflow(
+      createWorkflowSnapshot({
+        creditAccounts: nextCreditAccounts,
+        id: workflowId,
+        phase: "approved",
+        recommendation,
+        request,
+      }),
+    );
   }
 
   return (
@@ -170,6 +210,12 @@ export function CareRequestWorkflow() {
               >
                 Run Matching Agent
               </button>
+              <Link
+                className="rounded-md border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold hover:bg-[var(--panel-soft)]"
+                href="/"
+              >
+                View updated dashboard
+              </Link>
             </div>
           </Panel>
 

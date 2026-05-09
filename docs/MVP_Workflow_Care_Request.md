@@ -76,6 +76,18 @@ In the current demo workflow, approval applies:
 - Customer usage: 1 matching credit
 - Supplier usage: 1 qualified lead credit
 
+### 6. Update Dashboard
+
+The workflow writes the latest request, match, phase, and credit accounts to browser local storage. The dashboard reads that state and updates:
+
+- Customer demands
+- Match recommendations
+- Approval queue
+- Agent tasks
+- Credit balance panel
+
+The `Reset demo` button on the dashboard clears the local workflow state.
+
 ## Database Direction
 
 The Prisma schema now includes:
@@ -93,7 +105,9 @@ These records will support customer and supplier account balances once the app i
 2. Open `http://localhost:3000/workflows/care-request`.
 3. Click `Log request`.
 4. Click `Run Matching Agent`.
-5. Review the recommended freelance caregiver.
-6. Click `Approve match and update credits`.
-7. Confirm customer and supplier email drafts are visible.
-8. Confirm customer and supplier credit ledgers each record a `usage` transaction.
+5. Open `http://localhost:3000` and confirm the request and match appear on the dashboard.
+6. Return to the workflow and review the recommended freelance caregiver.
+7. Click `Approve match and update credits`.
+8. Confirm customer and supplier email drafts are visible.
+9. Confirm customer and supplier credit ledgers each record a `usage` transaction.
+10. Return to the dashboard and confirm the approved match and updated credits are visible.

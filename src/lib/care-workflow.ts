@@ -216,8 +216,9 @@ export function recommendCaregiver(
 export function approveMatchAndApplyCredits(
   accounts: CreditAccount[],
   recommendation: MatchRecommendation,
+  request: CareRequest,
 ) {
-  const matchLabel = `${initialCareRequest.seniorName} + ${recommendation.caregiver.name}`;
+  const matchLabel = `${request.seniorName} + ${recommendation.caregiver.name}`;
 
   return accounts.map((account) => {
     const isCustomer = account.owner === "customer";
@@ -231,7 +232,7 @@ export function approveMatchAndApplyCredits(
       balance: account.balance + amount,
       transactions: [
         {
-          id: `${account.id}-usage`,
+          id: `${account.id}-usage-${Date.now()}`,
           type: "usage" as const,
           amount,
           description,

@@ -24,6 +24,7 @@ Confirmed MVP choices:
 - Communication: email drafts manually copied by the operator.
 - Auth foundation: NextAuth.
 - Credit model: customer and supplier accounts track top-ups, first-match free credits, and usage.
+- Dashboard update model: the browser stores workflow results locally so the dashboard updates after a request is logged, matched, and approved.
 
 ## Repository Purpose
 
@@ -61,3 +62,12 @@ Open:
 http://localhost:3000
 http://localhost:3000/workflows/care-request
 ```
+
+Basic use-case test:
+
+1. Open `/workflows/care-request`.
+2. Click `Log request`.
+3. Click `Run Matching Agent`.
+4. Open `/` and confirm the dashboard shows the new request and match.
+5. Return to the workflow and click `Approve match and update credits`.
+6. Open `/` again and confirm the dashboard shows updated credit balances.

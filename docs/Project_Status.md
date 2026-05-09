@@ -7,10 +7,10 @@ Match now has a working Next.js MVP scaffold and a first interactive workflow fo
 The app currently supports:
 
 - Internal operator dashboard.
-- Demo senior care request workflow.
+- Stateful senior care request workflow using browser local storage for the MVP demo.
 - Matching a senior care request to a phone-verified freelance caregiver.
 - Manual-copy email drafts for customer and supplier communication.
-- Customer and supplier credit ledgers.
+- Customer and supplier credit ledgers that update after match approval.
 - Credit top-ups, first-match free credits, and match usage entries.
 - Prisma schema direction for persistent database implementation.
 - NextAuth foundation for simple operator authentication.
@@ -43,6 +43,21 @@ The workflow demonstrates:
 4. Operator approves the recommended match.
 5. Customer and supplier email drafts appear for manual copying.
 6. Customer and supplier credit accounts are updated with usage transactions.
+7. Dashboard reads the saved workflow and updates request, match, approval, task, and credit sections.
+
+## Dashboard Update Behavior
+
+The current MVP stores workflow results in browser local storage under:
+
+`match.careWorkflows.v1`
+
+After the operator logs and matches a care request:
+
+- The dashboard shows the new senior request in `Customer demands`.
+- The dashboard shows the recommended caregiver in `Match recommendations`.
+- The dashboard shows pending approval items while the workflow is matched but not approved.
+- After approval, the dashboard shows updated customer and supplier credit balances.
+- The `Reset demo` button clears locally stored workflow data.
 
 ## Credit Account Model
 
@@ -84,10 +99,13 @@ Use case test:
 2. Review or edit the senior care request.
 3. Click `Log request`.
 4. Click `Run Matching Agent`.
-5. Review the caregiver recommendation.
-6. Click `Approve match and update credits`.
-7. Confirm email drafts are visible.
-8. Confirm customer and supplier credit ledger balances decrease by 1 usage credit.
+5. Open `/` and confirm the dashboard now shows the logged request and match-ready status.
+6. Return to `/workflows/care-request`.
+7. Review the caregiver recommendation.
+8. Click `Approve match and update credits`.
+9. Confirm email drafts are visible.
+10. Confirm customer and supplier credit ledger balances decrease by 1 usage credit.
+11. Open `/` again and confirm the dashboard reflects the approved match and updated credit balances.
 
 ## Verification Commands
 
@@ -106,10 +124,9 @@ Current status: these checks pass.
 
 Recommended next slice:
 
-1. Persist care requests, caregivers, matches, drafts, and credit ledger entries to PostgreSQL.
+1. Persist browser-stored care requests, caregivers, matches, drafts, and credit ledger entries to PostgreSQL.
 2. Add forms for invite-only customer and caregiver intake.
 3. Add a real operator approval queue.
 4. Add basic NextAuth sign-in UI.
 5. Add manual-copy buttons for email drafts.
 6. Add simple seeded data for local development.
-
