@@ -1,5 +1,6 @@
 import {
   ClipboardCheck,
+  Coins,
   HeartHandshake,
   MailCheck,
   UserRoundCheck,
@@ -26,10 +27,10 @@ export const initialDashboard = {
       icon: MailCheck,
     },
     {
-      label: "Agent tasks",
-      value: "21",
-      note: "Maestro-coordinated workflow items.",
-      icon: ClipboardCheck,
+      label: "Credit balances",
+      value: "10",
+      note: "Customer and supplier credits available.",
+      icon: Coins,
     },
   ],
   demands: [
@@ -136,4 +137,10 @@ export const initialDashboard = {
       tone: "success" as const,
     },
   ],
+  workflow: {
+    label: "MVP use case",
+    summary:
+      "Log a care request, run caregiver matching, approve email drafts, and apply credit usage.",
+    icon: ClipboardCheck,
+  },
 };

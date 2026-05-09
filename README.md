@@ -13,6 +13,7 @@ This repository will hold the code for Match, plus working documentation for the
 - [Match.md](Match.md): Product concept and agent roles.
 - [Build_Plan.md](Build_Plan.md): Proposed approach to build the app.
 - [docs/MVP_Plan.md](docs/MVP_Plan.md): Focused MVP build plan.
+- [docs/MVP_Workflow_Care_Request.md](docs/MVP_Workflow_Care_Request.md): First working MVP care request workflow.
 
 ## Initial Project Structure
 

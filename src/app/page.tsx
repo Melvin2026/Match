@@ -1,5 +1,6 @@
 import {
   ClipboardCheck,
+  Coins,
   HeartHandshake,
   MailCheck,
   SearchCheck,
@@ -8,6 +9,7 @@ import {
 } from "lucide-react";
 import { StatusBadge } from "@/components/status-badge";
 import { initialDashboard } from "@/lib/demo-data";
+import Link from "next/link";
 
 export default function Home() {
   const {
@@ -36,7 +38,7 @@ export default function Home() {
             "Matches",
             "Approval queue",
             "Agent tasks",
-            "Subscriptions",
+            "Credit accounts",
           ].map((item, index) => (
             <a
               className={`block rounded-md px-3 py-2 ${
@@ -70,9 +72,12 @@ export default function Home() {
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <button className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--accent-strong)]">
-                New demand
-              </button>
+              <Link
+                className="rounded-md bg-[var(--accent)] px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-[var(--accent-strong)]"
+                href="/workflows/care-request"
+              >
+                New care workflow
+              </Link>
               <button className="rounded-md border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold hover:bg-[var(--panel-soft)]">
                 Invite caregiver
               </button>
@@ -270,6 +275,30 @@ export default function Home() {
                 </div>
               </div>
               <StatusBadge tone="success">Active</StatusBadge>
+            </div>
+          </section>
+
+          <section className="rounded-md border border-[var(--line)] bg-[var(--panel)] p-4">
+            <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-start gap-3">
+                <Coins
+                  aria-hidden="true"
+                  className="mt-1 h-5 w-5 text-[var(--accent)]"
+                />
+                <div>
+                  <h3 className="font-semibold">Credits ledger</h3>
+                  <p className="mt-1 max-w-4xl text-sm leading-6 text-[var(--muted)]">
+                    Customer and supplier accounts track top-ups, first-match
+                    free credits, and usage when an operator approves a match.
+                  </p>
+                </div>
+              </div>
+              <Link
+                className="rounded-md border border-[var(--line)] bg-white px-4 py-2 text-sm font-semibold hover:bg-[var(--panel-soft)]"
+                href="/workflows/care-request"
+              >
+                Open workflow
+              </Link>
             </div>
           </section>
         </div>

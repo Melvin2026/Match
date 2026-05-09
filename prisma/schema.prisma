@@ -83,6 +83,17 @@ enum SubscriptionStatus {
   CANCELLED
 }
 
+enum CreditOwnerType {
+  CUSTOMER
+  SUPPLIER
+}
+
+enum CreditTransactionType {
+  TOP_UP
+  USAGE
+  ADJUSTMENT
+}
+
 model User {
   id            String    @id @default(cuid())
   name          String?
@@ -141,6 +152,7 @@ model Customer {
   demands            Demand[]
   subscriptions      Subscription[]
   charges            FeeForServiceCharge[]
+  creditAccounts     CreditAccount[]
   createdAt          DateTime             @default(now())
   updatedAt          DateTime             @updatedAt
 }
@@ -156,6 +168,7 @@ model Supplier {
   subscriptionStatus      SubscriptionStatus      @default(FIRST_MATCH_FREE)
   supplies                Supply[]
   subscriptions           Subscription[]
+  creditAccounts          CreditAccount[]
   createdAt               DateTime                @default(now())
   updatedAt               DateTime                @updatedAt
 }
@@ -205,8 +218,35 @@ model Match {
   supply      Supply      @relation(fields: [supplyId], references: [id])
   drafts      Draft[]
   approvals   Approval[]
+  creditTransactions CreditTransaction[]
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
+}
+
+model CreditAccount {
+  id           String              @id @default(cuid())
+  ownerType    CreditOwnerType
+  customerId   String?
+  supplierId   String?
+  label        String
+  balance      Int                 @default(0)
+  customer     Customer?           @relation(fields: [customerId], references: [id])
+  supplier     Supplier?           @relation(fields: [supplierId], references: [id])
+  transactions CreditTransaction[]
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+}
+
+model CreditTransaction {
+  id              String                @id @default(cuid())
+  creditAccountId String
+  matchId         String?
+  type            CreditTransactionType
+  amount          Int
+  description     String
+  creditAccount   CreditAccount         @relation(fields: [creditAccountId], references: [id])
+  match           Match?                @relation(fields: [matchId], references: [id])
+  createdAt       DateTime              @default(now())
 }
 
 model AgentTask {
