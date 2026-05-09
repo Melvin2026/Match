@@ -1,0 +1,311 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  OPERATOR
+  CUSTOMER
+  SUPPLIER
+}
+
+enum InviteStatus {
+  INVITED
+  ACCEPTED
+  EXPIRED
+  REVOKED
+}
+
+enum PhoneVerificationStatus {
+  UNVERIFIED
+  MANUAL_VALID
+  OTP_VERIFIED
+}
+
+enum RecordStatus {
+  NEW
+  NEEDS_INFO
+  READY
+  MATCHING
+  MATCHED
+  CLOSED
+  ARCHIVED
+}
+
+enum MatchStatus {
+  RECOMMENDED
+  NEEDS_REVIEW
+  APPROVED
+  INTRO_DRAFTED
+  COMPLETED
+  DECLINED
+}
+
+enum AgentType {
+  MAESTRO
+  DEMAND
+  SUPPLY
+  MATCHING
+  RESEARCH
+  ACCOUNTS
+}
+
+enum TaskStatus {
+  QUEUED
+  IN_PROGRESS
+  BLOCKED
+  COMPLETED
+  CANCELLED
+}
+
+enum DraftType {
+  CUSTOMER_EMAIL
+  SUPPLIER_EMAIL
+  MATCH_SUMMARY
+  BILLING_REMINDER
+}
+
+enum ApprovalStatus {
+  PENDING
+  APPROVED
+  CHANGES_REQUESTED
+  REJECTED
+}
+
+enum SubscriptionStatus {
+  FIRST_MATCH_FREE
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  role          UserRole  @default(OPERATOR)
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Customer {
+  id                 String               @id @default(cuid())
+  name               String
+  email              String?
+  phone              String?
+  area               String
+  inviteStatus       InviteStatus         @default(INVITED)
+  subscriptionStatus SubscriptionStatus   @default(FIRST_MATCH_FREE)
+  demands            Demand[]
+  subscriptions      Subscription[]
+  charges            FeeForServiceCharge[]
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+}
+
+model Supplier {
+  id                      String                  @id @default(cuid())
+  name                    String
+  email                   String?
+  phone                   String
+  area                    String
+  inviteStatus            InviteStatus            @default(INVITED)
+  phoneVerificationStatus PhoneVerificationStatus @default(UNVERIFIED)
+  subscriptionStatus      SubscriptionStatus      @default(FIRST_MATCH_FREE)
+  supplies                Supply[]
+  subscriptions           Subscription[]
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+}
+
+model Demand {
+  id            String       @id @default(cuid())
+  customerId    String
+  category      String       @default("Caregiving")
+  needSummary   String
+  urgency       String
+  budget        String?
+  preferredArea String
+  constraints   String?
+  status        RecordStatus @default(NEW)
+  customer      Customer     @relation(fields: [customerId], references: [id])
+  matches       Match[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Supply {
+  id            String       @id @default(cuid())
+  supplierId    String
+  category      String       @default("Caregiving")
+  offering      String
+  availability  String
+  hourlyRate    Decimal?
+  coverageArea  String
+  qualifications String?
+  status        RecordStatus @default(NEW)
+  supplier      Supplier     @relation(fields: [supplierId], references: [id])
+  matches       Match[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Match {
+  id          String      @id @default(cuid())
+  demandId    String
+  supplyId    String
+  score       Int
+  rationale   String
+  risks       String?
+  nextAction  String
+  status      MatchStatus @default(RECOMMENDED)
+  demand      Demand      @relation(fields: [demandId], references: [id])
+  supply      Supply      @relation(fields: [supplyId], references: [id])
+  drafts      Draft[]
+  approvals   Approval[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+}
+
+model AgentTask {
+  id          String     @id @default(cuid())
+  agent       AgentType
+  title       String
+  description String
+  status      TaskStatus @default(QUEUED)
+  output      String?
+  drafts      Draft[]
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Draft {
+  id          String         @id @default(cuid())
+  type        DraftType
+  subject     String
+  body        String
+  agentTaskId String?
+  matchId     String?
+  status      ApprovalStatus @default(PENDING)
+  agentTask   AgentTask?     @relation(fields: [agentTaskId], references: [id])
+  match       Match?         @relation(fields: [matchId], references: [id])
+  approvals   Approval[]
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+}
+
+model Approval {
+  id         String         @id @default(cuid())
+  status     ApprovalStatus @default(PENDING)
+  notes      String?
+  draftId    String?
+  matchId    String?
+  approvedBy String?
+  draft      Draft?         @relation(fields: [draftId], references: [id])
+  match      Match?         @relation(fields: [matchId], references: [id])
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+}
+
+model Subscription {
+  id         String             @id @default(cuid())
+  customerId String?
+  supplierId String?
+  status     SubscriptionStatus @default(FIRST_MATCH_FREE)
+  planName   String
+  startsAt   DateTime?
+  endsAt     DateTime?
+  customer   Customer?          @relation(fields: [customerId], references: [id])
+  supplier   Supplier?          @relation(fields: [supplierId], references: [id])
+  createdAt  DateTime           @default(now())
+  updatedAt  DateTime           @updatedAt
+}
+
+model FeeForServiceCharge {
+  id          String    @id @default(cuid())
+  customerId  String
+  description String
+  amount      Decimal
+  currency    String    @default("SGD")
+  paidAt      DateTime?
+  customer    Customer  @relation(fields: [customerId], references: [id])
+  reminders   PaymentReminder[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model PaymentReminder {
+  id        String              @id @default(cuid())
+  chargeId  String
+  subject   String
+  body      String
+  status    ApprovalStatus      @default(PENDING)
+  charge    FeeForServiceCharge @relation(fields: [chargeId], references: [id])
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+}
+
+model ResearchOpportunity {
+  id              String   @id @default(cuid())
+  name            String
+  segment         String
+  demandSignal    String
+  supplySignal    String
+  score           Int
+  reasoning       String
+  recommendedNext String
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model AuditEvent {
+  id          String   @id @default(cuid())
+  actor       String
+  action      String
+  entityType  String
+  entityId    String
+  description String
+  createdAt   DateTime @default(now())
+}
