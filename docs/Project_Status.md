@@ -4,6 +4,13 @@
 
 Match now has a working Next.js MVP scaffold and a first interactive workflow for the initial Singapore caregiving use case.
 
+Last updated handoff:
+
+- The care-request workflow is stateful in the browser.
+- A logged and matched request updates the dashboard.
+- Approving the match updates customer and supplier credit ledgers.
+- Web Preview should be used next to manually test this use case end to end.
+
 The app currently supports:
 
 - Internal operator dashboard.
@@ -106,6 +113,22 @@ Use case test:
 9. Confirm email drafts are visible.
 10. Confirm customer and supplier credit ledger balances decrease by 1 usage credit.
 11. Open `/` again and confirm the dashboard reflects the approved match and updated credit balances.
+
+Expected successful result:
+
+- The new senior request appears in the dashboard `Customer demands` table.
+- The recommended freelance caregiver appears in `Match recommendations`.
+- Before approval, the dashboard shows pending match/email approval items.
+- After approval, the dashboard shows the match as completed in agent tasks.
+- Customer and supplier credit balances are reduced by 1 usage credit.
+- The workflow page shows customer and supplier email drafts ready for manual copying.
+
+Reset for another test:
+
+1. Open `/`.
+2. Click `Reset demo`.
+3. Reopen `/workflows/care-request`.
+4. Repeat the test flow.
 
 ## Verification Commands
 

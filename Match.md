@@ -30,6 +30,15 @@ Current working app routes:
 - `/`: Internal operator dashboard.
 - `/workflows/care-request`: End-to-end MVP care request workflow.
 
+Current workflow behavior:
+
+- Operators can log a senior care request.
+- The Matching Agent recommends an eligible phone-verified freelance caregiver.
+- Operators can approve the match.
+- Customer and supplier email drafts are generated for manual copying.
+- Customer and supplier credit ledgers are updated after approval.
+- The dashboard updates from browser-stored workflow state during the MVP demo.
+
 ## Product Direction
 
 Match should serve both:

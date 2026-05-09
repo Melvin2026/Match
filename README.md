@@ -71,3 +71,9 @@ Basic use-case test:
 4. Open `/` and confirm the dashboard shows the new request and match.
 5. Return to the workflow and click `Approve match and update credits`.
 6. Open `/` again and confirm the dashboard shows updated credit balances.
+
+Break handoff:
+
+- Start testing at `http://localhost:3000/workflows/care-request`.
+- The dashboard should update after the request is logged, matched, and approved.
+- Use `Reset demo` on the dashboard before rerunning the flow.

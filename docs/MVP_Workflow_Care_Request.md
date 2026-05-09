@@ -111,3 +111,11 @@ These records will support customer and supplier account balances once the app i
 8. Confirm customer and supplier email drafts are visible.
 9. Confirm customer and supplier credit ledgers each record a `usage` transaction.
 10. Return to the dashboard and confirm the approved match and updated credits are visible.
+
+## Handoff Note
+
+When returning from the break, start testing from:
+
+`http://localhost:3000/workflows/care-request`
+
+The most important behavior to confirm is that the workflow is no longer just a static demo. It should save the request and match in browser local storage, then the dashboard at `http://localhost:3000` should update after the request is logged, matched, and approved.
