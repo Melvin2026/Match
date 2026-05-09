@@ -4,6 +4,19 @@
 
 Build Match as a multi-agent, human-in-the-loop marketplace for Senior Living goods and services. The app should support internal operators first, then extend into customer-facing and supplier-facing marketplace experiences.
 
+## Current Build Status
+
+The initial Next.js MVP scaffold is complete. The app currently includes an internal operator dashboard and a working demo workflow at `/workflows/care-request`.
+
+The current MVP use case demonstrates:
+
+- Logging a senior care request.
+- Routing work through the Demand, Supply, Matching, and Accounts agent roles.
+- Matching the request to a phone-verified freelance caregiver.
+- Preparing customer and supplier email drafts for manual operator copying.
+- Updating customer and supplier credit accounts when the match is approved.
+- Tracking top-ups, first-match free credits, and usage in credit ledgers.
+
 Initial MVP decisions:
 
 - Launch geography: Singapore.
@@ -15,6 +28,7 @@ Initial MVP decisions:
 - First communication channel: email drafts for human approval.
 - First email workflow: operator manually copies approved drafts into email.
 - Initial subscription offer: customers and suppliers receive the first matching service free.
+- Initial credit model: customer and supplier accounts track top-ups and usage.
 - Technical stack: Next.js web app with a database-backed internal dashboard.
 - Authentication: NextAuth.
 
@@ -203,19 +217,18 @@ The first MVP should not need:
 
 ## Immediate Next Steps
 
-1. Define Singapore caregiving MVP user journeys.
-2. Define valid-phone-number verification flow for freelance caregivers.
-3. Create the initial database schema.
-4. Scaffold the Next.js app.
-5. Build the internal operator MVP.
-6. Add the first agent workflows.
-7. Add external customer and supplier intake forms.
-8. Add subscription and fee-for-service tracking.
+1. Connect the care-request workflow to persistent PostgreSQL records.
+2. Add seeded local data for customers, caregivers, matches, drafts, and credit ledgers.
+3. Add invite-only customer and supplier intake forms.
+4. Add a real approval queue for match recommendations and email drafts.
+5. Add copy buttons for approved email drafts.
+6. Add NextAuth sign-in UI and route protection.
+7. Expand credit account screens for top-ups and usage history.
 
 ## Open Build Questions
 
-1. Should the invite-only MVP start with a customer request form, supplier offering form, or both?
-2. Should valid phone numbers be checked manually first, or should OTP verification be added in MVP?
-3. What happens after the first free match: paid subscription, fee-for-service, or both?
-4. What customer fee-for-service items should be supported first?
-5. What sensitive caregiving details require extra approval before sharing?
+1. What happens after the first free match: paid subscription, fee-for-service, or both?
+2. Should valid phone numbers be checked manually first, or should OTP verification be added later?
+3. What customer fee-for-service items should be supported first?
+4. What sensitive caregiving details require extra approval before sharing?
+5. Should invite-only intake start with customer request forms, supplier offering forms, or both?

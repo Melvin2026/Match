@@ -14,6 +14,8 @@ This workflow covers the first Match MVP use case:
 
 `/workflows/care-request`
 
+The dashboard at `/` links to this workflow through the `New care workflow` and `Open workflow` actions.
+
 ## Workflow Steps
 
 ### 1. Log Care Request
@@ -85,3 +87,13 @@ The Prisma schema now includes:
 
 These records will support customer and supplier account balances once the app is connected to PostgreSQL.
 
+## Web Preview Test
+
+1. Start the app with `npm run dev`.
+2. Open `http://localhost:3000/workflows/care-request`.
+3. Click `Log request`.
+4. Click `Run Matching Agent`.
+5. Review the recommended freelance caregiver.
+6. Click `Approve match and update credits`.
+7. Confirm customer and supplier email drafts are visible.
+8. Confirm customer and supplier credit ledgers each record a `usage` transaction.

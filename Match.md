@@ -8,6 +8,28 @@ The first focus area is goods and services that help elderly people live safely,
 
 The app should help identify demand, identify supply, qualify both sides, find suitable matches, complete the match workflow, and manage follow-up actions such as onboarding, billing, subscriptions, fee-for-service work, and reminders.
 
+## Current MVP Summary
+
+The first MVP is focused on Singapore caregiving services.
+
+Confirmed MVP scope:
+
+- Geography: Singapore.
+- Category: caregiving.
+- First customer persona: seniors themselves.
+- First supplier persona: freelance caregivers.
+- Intake: invite-only.
+- Supplier verification: valid phone number.
+- Communication: agents prepare email drafts; operators manually copy and send approved drafts.
+- Commercial model for MVP: customers and suppliers receive the first matching service free.
+- Credit tracking: customer and supplier accounts track top-ups, first-match free credits, and usage.
+- Application stack: Next.js, TypeScript, Tailwind CSS, Prisma, PostgreSQL direction, and NextAuth.
+
+Current working app routes:
+
+- `/`: Internal operator dashboard.
+- `/workflows/care-request`: End-to-end MVP care request workflow.
+
 ## Product Direction
 
 Match should serve both:
@@ -124,6 +146,8 @@ Responsibilities:
 - Close commercial matches by billing customers and suppliers where applicable.
 - Track customer and supplier subscription fees.
 - Track customer fee-for-service charges.
+- Track customer and supplier credit accounts.
+- Record credit top-ups and match-related credit usage.
 - Review outstanding bills.
 - Prepare payment reminder drafts for customers and suppliers for overdue or outstanding payments.
 - Track payment status and escalate unresolved accounts issues to the Maestro Agent.
@@ -192,7 +216,19 @@ Responsibilities:
 - Billing status
 - Subscription status
 - Fee-for-service status
+- Customer credit usage
+- Supplier credit usage
 - Completion notes
+
+### Credit Account
+
+- Account owner type: customer or supplier
+- Owner name
+- Current credit balance
+- Top-up transactions
+- Usage transactions
+- Related match, where relevant
+- Notes
 
 ### Research Opportunity
 
@@ -219,6 +255,7 @@ Responsibilities:
 - Follow-up reminders for customers, suppliers, and accounts.
 - Research opportunity pipeline.
 - Subscription, billing, and payment status tracker.
+- Customer and supplier credit ledger.
 - Human approval queue for agent-prepared drafts.
 - Audit trail of agent actions and decisions.
 
@@ -234,22 +271,19 @@ Core MVP capabilities:
 - Let agents prepare outreach, follow-up, onboarding, and billing drafts.
 - Require human approval before sending external messages or taking billing action.
 - Track customer subscriptions, supplier subscriptions, and customer fee-for-service charges.
+- Track customer and supplier credits, including top-ups and usage.
 - Provide an internal dashboard for operations.
 - Provide an external-facing marketplace experience for customers and suppliers.
 
-## Open Questions
+## Remaining Product Questions
 
-1. Which Senior Living category should be the first beachhead: caregiving, medical support, home safety, meals, transport, equipment, companionship, or another category?
-2. Who is the first primary customer: seniors, adult children, caregivers, community organizations, insurers, employers, or care facilities?
-3. What geography should Match launch in first?
-4. What information is required before a customer or supplier can be considered onboarded?
-5. Should match scoring be rules-based at first, AI-assisted, or both?
-6. What systems should Match integrate with first, such as email, CRM, spreadsheets, accounting tools, or messaging apps?
-7. What subscription tiers should customers and suppliers have?
-8. Which fee-for-service activities should customers pay for?
-9. What approval workflow is needed before drafts are sent externally?
+1. What happens after the first free match: paid subscription, fee-for-service, or both?
+2. Should valid phone numbers be checked manually first, or should OTP verification be added later?
+3. What fee-for-service items should customers pay for first?
+4. What caregiving details require extra approval before sharing with customers or suppliers?
+5. When should the demo workflow be connected to a live PostgreSQL database?
 
-## Next Draft Sections
+## Next Build Sections
 
 - Product requirements
 - Agent interaction design

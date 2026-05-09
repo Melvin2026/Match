@@ -6,6 +6,17 @@ Build the first usable version of Match as a human-in-the-loop multi-agent marke
 
 The MVP should help an internal operator capture customer needs, capture supplier offerings, generate match recommendations, prepare drafts for follow-up, and track the progress of each match. External customer and supplier flows should be simple intake experiences at first, with internal review before any action is taken.
 
+## Current MVP Implementation
+
+The first working MVP slice is available in the app.
+
+Working routes:
+
+- `/`: Internal operator dashboard.
+- `/workflows/care-request`: Care request workflow.
+
+The current workflow demonstrates logging a senior care request, matching it to a phone-verified freelance caregiver, generating manual-copy email drafts, and updating customer and supplier credit ledgers after operator approval.
+
 ## Recommended MVP Positioning
 
 Match should start as an assisted Senior Living matching service, not a fully open marketplace.
@@ -82,6 +93,7 @@ Needs:
 - Human approval queue.
 - Basic subscription tracking for customers and suppliers.
 - Basic fee-for-service tracking for customers.
+- Customer and supplier credit ledger tracking.
 - Audit trail of agent actions and approvals.
 
 ### Should Have
@@ -286,6 +298,7 @@ Create:
 - Match records.
 - Agent task records.
 - Draft and approval records.
+- Credit account and credit transaction records.
 
 ### Step 3: Build Internal Operator Dashboard
 
@@ -348,9 +361,10 @@ The MVP is successful when an internal operator can:
 ## Key Open Questions
 
 1. What happens after the first free match: paid subscription, fee-for-service, or both?
-2. How should Match validate phone numbers in MVP: manual operator check, OTP verification, or both later?
+2. How should Match validate phone numbers after MVP: manual operator check, OTP verification, or both?
 3. What fee-for-service items should customers pay for first?
 4. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
+5. When should the demo workflow be connected to a live PostgreSQL database?
 
 ## Initial Technical Direction
 
