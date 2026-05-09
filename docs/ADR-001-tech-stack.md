@@ -8,7 +8,7 @@ Accepted
 
 Match needs an MVP that can support an internal operator dashboard, structured demand and supply records, match recommendations, human approval workflows, and later external customer and supplier intake.
 
-The first MVP focus is Singapore caregiving services for seniors, with email as the first communication channel. Agents should prepare drafts and recommendations for human approval rather than taking external action automatically.
+The first MVP focus is Singapore caregiving services for seniors, with freelance caregivers as the first supplier persona. Email is the first communication channel. Agents should prepare drafts and recommendations for human approval rather than taking external action automatically. Approved email drafts will be manually copied and sent by an operator in the MVP.
 
 ## Decision
 
@@ -21,7 +21,7 @@ Initial stack:
 - PostgreSQL for the database.
 - Prisma for schema management and database queries.
 - Tailwind CSS for UI styling.
-- Authentication to be selected between NextAuth and Clerk during implementation setup.
+- NextAuth for authentication.
 
 ## Rationale
 
@@ -33,5 +33,4 @@ Prisma and PostgreSQL provide a clear foundation for the data model while keepin
 
 - The first build should scaffold the Next.js app inside this repository.
 - The initial database schema should cover customers, suppliers, demand, supply, matches, agent tasks, drafts, approvals, subscriptions, fee-for-service charges, and audit events.
-- The MVP should start with email draft generation stored in the app. Direct email sending can be added after the approval workflow is stable.
-
+- The MVP should start with email draft generation stored in the app for manual operator copying. Direct email sending can be added after the approval workflow is stable.

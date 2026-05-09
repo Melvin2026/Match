@@ -15,8 +15,11 @@ Initial MVP focus:
 - Geography: Singapore.
 - First category: caregiving services.
 - First customer persona: seniors themselves.
+- First supplier persona: freelance caregivers.
 - First communication channel: email drafts for human approval.
+- Email execution: operator manually copies approved drafts into email.
 - Initial stack: Next.js web app with a database-backed internal dashboard.
+- Authentication: NextAuth.
 
 Initial promise:
 
@@ -256,12 +259,14 @@ Confirmed:
 - First Senior Living category: caregiving services.
 - First launch geography: Singapore.
 - First customer type: seniors themselves.
+- First supplier type: freelance caregivers.
 - First external communication channel: email.
+- First email workflow: Match generates approved drafts for manual operator sending.
 - Preferred technology stack: Next.js web app with a database-backed internal dashboard.
+- Authentication: NextAuth.
 
 Still to decide:
 
-- First supplier type.
 - Supplier verification requirements.
 - Subscription and fee-for-service package details.
 
@@ -337,14 +342,12 @@ The MVP is successful when an internal operator can:
 
 ## Key Open Questions
 
-1. Who is the first supplier persona: freelance caregivers, caregiving agencies, nursing providers, community care organizations, or all of these?
-2. Should the first external intake be open to the public or invite-only?
-3. Should supplier verification be required before suppliers can be recommended?
-4. What should the first customer subscription tier include?
-5. What should the first supplier subscription tier include?
-6. What fee-for-service items should customers pay for first?
-7. Should emails be sent through an integration in MVP, or should Match generate drafts for manual sending first?
-8. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
+1. Should the first external intake be open to the public or invite-only?
+2. Should supplier verification be required before freelance caregivers can be recommended?
+3. What should the first customer subscription tier include?
+4. What should the first supplier subscription tier include?
+5. What fee-for-service items should customers pay for first?
+6. What personal, medical, or caregiving information should be considered sensitive and require extra approval?
 
 ## Initial Technical Direction
 
@@ -356,9 +359,9 @@ Recommended stack:
 - TypeScript for application code.
 - PostgreSQL for the database.
 - Prisma for database schema and queries.
-- NextAuth or Clerk for authentication.
+- NextAuth for authentication.
 - Tailwind CSS for UI styling.
-- Email draft generation stored inside the app before any human-approved sending.
+- Email draft generation stored inside the app for manual operator copying after approval.
 
 Initial app areas:
 
